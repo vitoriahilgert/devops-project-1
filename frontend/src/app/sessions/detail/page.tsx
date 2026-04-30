@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
 import { apiJson, ApiError } from "@/lib/api";
 import { assetUrl } from "@/lib/config";
@@ -32,9 +32,9 @@ function statusClass(s: string): string {
   return "";
 }
 
-export default function SessionDetailPage() {
-  const params = useParams();
-  const id = typeof params.id === "string" ? params.id : null;
+function SessionDetailInner() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
   const router = useRouter();
   const { token, ready } = useAuth();
   const [session, setSession] = useState<TestSession | null | undefined>(undefined);
@@ -166,7 +166,6 @@ export default function SessionDetailPage() {
           {strategy.imageUrls?.length ? (
             <div className="estrategia-images">
               {strategy.imageUrls.map((u) => (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img key={u} src={assetUrl(u)} alt="" />
               ))}
             </div>
@@ -199,5 +198,13 @@ export default function SessionDetailPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SessionDetailPage() {
+  return (
+    <Suspense fallback={<p style={{ padding: 24, color: "#888" }}>Carregando…</p>}>
+      <SessionDetailInner />
+    </Suspense>
   );
 }

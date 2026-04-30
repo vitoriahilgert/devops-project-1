@@ -1,4 +1,3 @@
-/** Textos do messages.properties (PT) */
 export const t = {
   footer: "GameTests Platform. Todos os direitos reservados.",
   header: {

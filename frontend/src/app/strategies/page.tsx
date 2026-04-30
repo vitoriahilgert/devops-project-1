@@ -133,7 +133,6 @@ export default function StrategiesPage() {
           <div className="image-gallery">
             {(galleryUrls ?? []).map((url) => (
               <a key={url} href={assetUrl(url)} target="_blank" rel="noreferrer">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={assetUrl(url)} alt="" />
               </a>
             ))}

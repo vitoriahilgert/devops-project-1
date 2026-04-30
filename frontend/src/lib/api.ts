@@ -1,6 +1,6 @@
 import { getApiBase } from "./config";
 
-const TOKEN_KEY = "aa2_access_token";
+const TOKEN_KEY = "gametests_access_token";
 
 export class ApiError extends Error {
   constructor(

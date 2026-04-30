@@ -5,7 +5,7 @@ import { apiJson, getStoredToken, setStoredToken } from "@/lib/api";
 import type { LoginResponse } from "@/lib/types";
 import { tokenIsAdmin } from "@/lib/jwt";
 
-const EMAIL_KEY = "aa2_login_email";
+const EMAIL_KEY = "gametests_login_email";
 
 export function getStoredLoginEmail(): string | null {
   if (typeof window === "undefined") return null;

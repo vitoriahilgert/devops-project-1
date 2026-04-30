@@ -158,7 +158,7 @@ function SessionsInner() {
                   <td>{stratMap[s.strategyId] ?? s.strategyId}</td>
                   <td>{labelStatus(s.status)}</td>
                   <td className="actions">
-                    <Link href={`/sessions/${s.id}`} title={t.sessions.details} className="btn-action">
+                    <Link href={`/sessions/detail?id=${encodeURIComponent(s.id)}`} title={t.sessions.details} className="btn-action">
                       <i className="fas fa-eye" />
                     </Link>
                     {isAdmin ? (
