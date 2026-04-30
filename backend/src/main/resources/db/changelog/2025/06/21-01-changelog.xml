@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1750547241520-10" author="vihil">
+        <dropForeignKeyConstraint baseTableName="projects_allowedMembers" constraintName="FK13dbtrf8nqtioij7s9hwtu5ag"/>
+    </changeSet>
+    <changeSet id="1750547241520-11" author="vihil">
+        <dropForeignKeyConstraint baseTableName="projects_allowedMembers" constraintName="FKn29h3hdlsx23o5hd9u2sum7qp"/>
+    </changeSet>
+    <changeSet id="1750547241520-3" author="vihil">
+        <createTable tableName="projects_allowed_members">
+            <column name="allowed_members_id" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="projects_id" type="binary(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1750547241520-4" author="vihil">
+        <addColumn tableName="projects">
+            <column name="creation_date_time" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1750547241520-5" author="vihil">
+        <addColumn tableName="test_sessions">
+            <column name="creation_date_time" type="DATETIME"/>
+            <column name="finish_date_time" type="DATETIME"/>
+            <column name="start_date_time" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="1750547241520-8" author="vihil">
+        <addForeignKeyConstraint baseColumnNames="projects_id" baseTableName="projects_allowed_members"
+                                 constraintName="fk_proallmem_on_project" referencedColumnNames="id"
+                                 referencedTableName="projects"/>
+    </changeSet>
+    <changeSet id="1750547241520-9" author="vihil">
+        <addForeignKeyConstraint baseColumnNames="allowed_members_id" baseTableName="projects_allowed_members"
+                                 constraintName="fk_proallmem_on_user" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1750547241520-12" author="vihil">
+        <dropTable cascadeConstraints="true" tableName="projects_allowedMembers"/>
+    </changeSet>
+    <changeSet id="1750547241520-13" author="vihil">
+        <dropColumn columnName="creationDateTime" tableName="projects"/>
+    </changeSet>
+    <changeSet id="1750547241520-14" author="vihil">
+        <dropColumn columnName="creationDateTime" tableName="test_sessions"/>
+
+        <dropColumn columnName="finishDateTime" tableName="test_sessions"/>
+
+        <dropColumn columnName="startDateTime" tableName="test_sessions"/>
+    </changeSet>
+    <changeSet id="1750547241520-1" author="vihil">
+        <modifyDataType columnName="examples" newDataType="VARCHAR(2000)" tableName="strategies"/>
+    </changeSet>
+    <changeSet id="1750547241520-2" author="vihil">
+        <modifyDataType columnName="tips" newDataType="VARCHAR(2000)" tableName="strategies"/>
+    </changeSet>
+
+</databaseChangeLog>
