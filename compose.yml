@@ -1,0 +1,72 @@
+# AA2 — três imagens construídas por Dockerfile (db + api + web) + compose.
+#
+# Requisito acadêmico: um serviço acessa outro pelo NOME DO SERVIÇO na rede Docker
+# (ex.: aa2-api → jdbc:mysql://aa2-db:3306/...), não via localhost apontando para porta publicada.
+#
+# Uso: na raiz do repositório → docker compose up --build
+# UI: http://localhost:3000  |  API: http://localhost:8080
+# No navegador, NEXT_PUBLIC_API_URL usa localhost porque o JavaScript roda na máquina do usuário.
+
+services:
+  aa2-db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: AA2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - aa2-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 40s
+    networks:
+      - aa2-net
+
+  aa2-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      # Host MySQL = nome do serviço na rede compose (não localhost)
+      SPRING_DATASOURCE_URL: jdbc:mysql://aa2-db:3306/AA2?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      aa2-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - aa2-uploads:/app/uploads
+    networks:
+      - aa2-net
+
+  aa2-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # URL da API no navegador (host expõe 8080)
+        NEXT_PUBLIC_API_URL: http://localhost:8080
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8080
+    depends_on:
+      - aa2-api
+    ports:
+      - "3000:3000"
+    networks:
+      - aa2-net
+
+volumes:
+  aa2-mysql-data:
+  aa2-uploads:
+
+networks:
+  aa2-net:
+    driver: bridge

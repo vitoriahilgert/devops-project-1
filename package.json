@@ -1,0 +1,12 @@
+{
+  "name": "project1-devops",
+  "private": true,
+  "description": "Raiz do repositório: scripts do frontend Next.js ficam em frontend/. Use npm run dev na raiz ou cd frontend && npm run dev.",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "lint": "npm --prefix frontend run lint",
+    "postinstall": "npm install --prefix frontend --no-audit --no-fund"
+  }
+}

@@ -1,0 +1,8 @@
+# Imagem do banco AA2 — estende mysql:8.0 (mesma linha usada antes via image:).
+# Variáveis abaixo são padrão; o compose.yml pode sobrescrevê-las em runtime.
+FROM mysql:8.0
+
+ENV MYSQL_DATABASE=AA2
+ENV MYSQL_USER=user
+ENV MYSQL_PASSWORD=password
+ENV MYSQL_ROOT_PASSWORD=password
