@@ -4,7 +4,7 @@ import { FormEvent, Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { apiJson, apiVoid, ApiError } from "@/lib/api";
+import { apiJson, apiVoid, getApiErrorMessage } from "@/lib/api";
 import type { Project, Strategy, TestSession, User } from "@/lib/types";
 import { t } from "@/lib/strings";
 
@@ -38,7 +38,7 @@ function SessionsInner() {
       const q = projectIdFilter ? `?projectId=${projectIdFilter}` : "";
       const [sess, projs, strat] = await Promise.all([
         apiJson<TestSession[]>(`/test-sessions${q}`, { token }),
-        apiJson<Project[]>("/project?filter=false", { token }),
+        apiJson<Project[]>("/project", { token }),
         apiJson<Strategy[]>("/strategies", { token: null }),
       ]);
       setSessions(sess);
@@ -48,8 +48,7 @@ function SessionsInner() {
       setNewStrategyId((prev) => prev || strat[0]?.id || "");
       setError(null);
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
-      else setError("Erro");
+      setError(getApiErrorMessage(e));
     }
   }, [token, projectIdFilter]);
 
@@ -94,7 +93,7 @@ function SessionsInner() {
       setNewDesc("");
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -106,7 +105,7 @@ function SessionsInner() {
       setModalDel(null);
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -154,7 +153,7 @@ function SessionsInner() {
               sessions.map((s) => (
                 <tr key={s.id}>
                   <td>{projMap[s.projectId] ?? s.projectId}</td>
-                  <td>{userMap[s.testerId] ?? s.testerId}</td>
+                  <td>{s.testerName ?? userMap[s.testerId] ?? s.testerId}</td>
                   <td>{stratMap[s.strategyId] ?? s.strategyId}</td>
                   <td>{labelStatus(s.status)}</td>
                   <td className="actions">

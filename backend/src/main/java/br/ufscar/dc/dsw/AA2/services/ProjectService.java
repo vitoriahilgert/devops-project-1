@@ -55,13 +55,9 @@ public class ProjectService {
         if (user.getRole().equals(UserRoleEnum.ADMIN)) {
             projects = projectRepository.findAll();
         } else {
-            if (filter) {
-                projects = projectRepository.findAll().stream()
-                        .filter(p -> p.getAllowedMembers().contains(user))
-                        .collect(Collectors.toList());
-            } else {
-                projects = projectRepository.findAll();
-            }
+            projects = projectRepository.findAll().stream()
+                    .filter(p -> p.getAllowedMembers().contains(user))
+                    .collect(Collectors.toList());
         }
 
         return projects.stream().map(GetProjectResponseDTO::new).collect(Collectors.toList());

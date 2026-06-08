@@ -41,6 +41,7 @@ export interface TestSession {
   startDateTime: string | null;
   finishDateTime: string | null;
   testerId: string;
+  testerName: string;
   projectId: string;
   strategyId: string;
   bugs: string | null;

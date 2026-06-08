@@ -16,6 +16,7 @@ public class GetTestSessionResponseDTO {
     private LocalDateTime startDateTime;
     private LocalDateTime finishDateTime;
     private UUID testerId;
+    private String testerName;
     private UUID projectId;
     private UUID strategyId;
     private String bugs;
@@ -28,6 +29,7 @@ public class GetTestSessionResponseDTO {
         this.status = testSession.getStatus();
         this.creationDateTime = testSession.getCreationDateTime();
         this.testerId = testSession.getTester().getId();
+        this.testerName = testSession.getTester().getName();
         this.creationDateTime = testSession.getCreationDateTime();
         this.projectId = testSession.getProject().getId();
         this.strategyId = testSession.getStrategy().getId();
@@ -98,6 +100,14 @@ public class GetTestSessionResponseDTO {
 
     public void setTesterId(UUID testerId) {
         this.testerId = testerId;
+    }
+
+    public String getTesterName() {
+        return testerName;
+    }
+
+    public void setTesterName(String testerName) {
+        this.testerName = testerName;
     }
 
     public UUID getProjectId() {

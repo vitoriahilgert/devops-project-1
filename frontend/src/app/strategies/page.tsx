@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
-import { apiJson, apiVoid, ApiError } from "@/lib/api";
+import { apiJson, apiVoid, getApiErrorMessage } from "@/lib/api";
 import { assetUrl } from "@/lib/config";
 import type { Strategy } from "@/lib/types";
 import { t } from "@/lib/strings";
@@ -19,8 +19,7 @@ export default function StrategiesPage() {
       setStrategies(await apiJson<Strategy[]>("/strategies", { token: null }));
       setError(null);
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
-      else setError("Erro");
+      setError(getApiErrorMessage(e));
     }
   }, []);
 
@@ -34,7 +33,7 @@ export default function StrategiesPage() {
       await apiVoid(`/strategies/${id}`, { method: "DELETE", token });
       await load();
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
+      setError(getApiErrorMessage(e));
     }
   }
 

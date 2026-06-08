@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { apiJson, apiVoid, ApiError } from "@/lib/api";
+import { apiJson, apiVoid, getApiErrorMessage } from "@/lib/api";
 import { tokenSubjectId } from "@/lib/jwt";
 import type { Project, User } from "@/lib/types";
 import { t } from "@/lib/strings";
@@ -31,7 +31,6 @@ export default function ProjectsPage() {
   const [testers, setTesters] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [order, setOrder] = useState<"nome" | "data">("nome");
-  const [filter, setFilter] = useState<"todos" | "meus">("todos");
   const [modal, setModal] = useState<"none" | "edit" | "delete">("none");
   const [editId, setEditId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -44,12 +43,11 @@ export default function ProjectsPage() {
   const load = useCallback(async () => {
     if (!token) return;
     try {
-      const list = await apiJson<Project[]>("/project?filter=false", { token });
+      const list = await apiJson<Project[]>("/project", { token });
       setProjects(list);
       setError(null);
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
-      else setError("Erro ao carregar");
+      setError(getApiErrorMessage(e, "Erro ao carregar"));
     }
   }, [token]);
 
@@ -76,17 +74,14 @@ export default function ProjectsPage() {
 
   const sortedFiltered = useMemo(() => {
     if (!projects) return [];
-    let rows = [...projects];
+    const rows = [...projects];
     if (order === "nome") {
       rows.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
     } else {
       rows.sort((a, b) => (a.creationDateTime < b.creationDateTime ? 1 : -1));
     }
-    if (!isAdmin && filter === "meus" && myId) {
-      rows = rows.filter((p) => p.allowedMembers?.some((m) => m.id === myId));
-    }
     return rows;
-  }, [projects, order, filter, isAdmin, myId]);
+  }, [projects, order]);
 
   function openNew() {
     setEditId(null);
@@ -136,7 +131,7 @@ export default function ProjectsPage() {
       setModal("none");
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -149,7 +144,7 @@ export default function ProjectsPage() {
       setDeleteId(null);
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -173,15 +168,6 @@ export default function ProjectsPage() {
               <option value="data">{t.projects.orderDate}</option>
             </select>
           </div>
-          {!isAdmin ? (
-            <div>
-              <label htmlFor="filtrar">{t.projects.filterBy}</label>
-              <select id="filtrar" value={filter} onChange={(e) => setFilter(e.target.value as "todos" | "meus")}>
-                <option value="todos">{t.projects.filterAll}</option>
-                <option value="meus">{t.projects.filterMine}</option>
-              </select>
-            </div>
-          ) : null}
         </div>
         {isAdmin ? (
           <button type="button" onClick={openNew}>

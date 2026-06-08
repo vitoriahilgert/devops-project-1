@@ -12,6 +12,19 @@ export class ApiError extends Error {
   }
 }
 
+export function getApiErrorMessage(err: unknown, fallback = "Ocorreu um erro inesperado."): string {
+  if (err instanceof ApiError) {
+    try {
+      const parsed = JSON.parse(err.body) as { message?: string; error?: string };
+      return parsed.message ?? parsed.error ?? err.body ?? fallback;
+    } catch {
+      return err.body || fallback;
+    }
+  }
+  if (err instanceof Error) return err.message || fallback;
+  return fallback;
+}
+
 export function getStoredToken(): string | null {
   if (typeof window === "undefined") return null;
   return window.localStorage.getItem(TOKEN_KEY);

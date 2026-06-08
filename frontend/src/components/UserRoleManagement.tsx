@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { apiJson, apiVoid, ApiError } from "@/lib/api";
+import { apiJson, apiVoid, getApiErrorMessage } from "@/lib/api";
 import type { User, UserRole } from "@/lib/types";
 import { t } from "@/lib/strings";
 
@@ -46,8 +46,7 @@ export function UserRoleManagement({ pageRole }: { pageRole: UserRole }) {
       setUsers(list);
       setError(null);
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
-      else setError("Erro");
+      setError(getApiErrorMessage(e));
     }
   }, [token, c.path]);
 
@@ -118,7 +117,7 @@ export function UserRoleManagement({ pageRole }: { pageRole: UserRole }) {
       setModal("none");
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -131,7 +130,7 @@ export function UserRoleManagement({ pageRole }: { pageRole: UserRole }) {
       setDelId(null);
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 

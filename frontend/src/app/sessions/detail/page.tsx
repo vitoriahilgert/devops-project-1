@@ -4,7 +4,7 @@ import { FormEvent, Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { apiJson, ApiError } from "@/lib/api";
+import { apiJson, getApiErrorMessage } from "@/lib/api";
 import { assetUrl } from "@/lib/config";
 import type { Project, Strategy, TestSession } from "@/lib/types";
 import { t } from "@/lib/strings";
@@ -55,8 +55,7 @@ function SessionDetailInner() {
       setError(null);
     } catch (e) {
       setSession(null);
-      if (e instanceof ApiError) setError(e.body);
-      else setError("Não encontrado");
+      setError(getApiErrorMessage(e, "Não encontrado"));
     }
   }, [token, id]);
 
@@ -75,7 +74,7 @@ function SessionDetailInner() {
       await apiJson(`/test-sessions/status/${id}`, { method: "PATCH", token });
       await load();
     } catch (e) {
-      if (e instanceof ApiError) setError(e.body);
+      setError(getApiErrorMessage(e));
     }
   }
 
@@ -91,7 +90,7 @@ function SessionDetailInner() {
       setBugText("");
       await load();
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
+      setError(getApiErrorMessage(err));
     }
   }
 
@@ -176,7 +175,7 @@ function SessionDetailInner() {
       <div className="detail-card">
         <h2>{t.sessionDetails.bugs}</h2>
         {s.bugs ? <pre className="current-description">{s.bugs}</pre> : <p style={{ color: "#888" }}>—</p>}
-        {!finished ? (
+        {s.status === "IN_PROGRESS" ? (
           <form onSubmit={addBug}>
             <label>{t.sessionDetails.newBug}</label>
             <textarea className="bug-textarea" value={bugText} onChange={(e) => setBugText(e.target.value)} required />
@@ -184,6 +183,10 @@ function SessionDetailInner() {
               {t.sessionDetails.addBug}
             </button>
           </form>
+        ) : s.status === "CREATED" ? (
+          <p style={{ color: "#aaa", fontStyle: "italic" }}>
+            Inicie a sessão para registrar bugs.
+          </p>
         ) : null}
       </div>
 

@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-import { apiMultipart, ApiError } from "@/lib/api";
+import { apiMultipart, getApiErrorMessage } from "@/lib/api";
 import { t } from "@/lib/strings";
 
 export default function CreateStrategyPage() {
@@ -36,8 +36,7 @@ export default function CreateStrategyPage() {
       await apiMultipart("/strategies", fd, token);
       router.push("/strategies");
     } catch (err) {
-      if (err instanceof ApiError) setError(err.body);
-      else setError("Erro");
+      setError(getApiErrorMessage(err));
     }
   }
 

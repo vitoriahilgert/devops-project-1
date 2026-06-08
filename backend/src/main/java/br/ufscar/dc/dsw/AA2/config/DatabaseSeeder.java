@@ -74,6 +74,29 @@ public class DatabaseSeeder {
 
                 projectRepository.save(project1);
                 System.out.println("Projeto 'ETv1' cadastrado com testadores associados.");
+
+                if (testerMaria != null) {
+                    Project project2 = new Project();
+                    project2.setName("MobileQA");
+                    project2.setDescription("Testes de regressão em apps Android, foco em fluxos de checkout e autenticação.");
+                    project2.addAllowedMember(testerMaria);
+                    projectRepository.save(project2);
+                    System.out.println("Projeto 'MobileQA' cadastrado com Maria Fernanda como testadora.");
+
+                    Project project3 = new Project();
+                    project3.setName("WebPerf");
+                    project3.setDescription("Análise de performance e acessibilidade em aplicações web responsivas.");
+                    project3.addAllowedMember(testerMaria);
+                    projectRepository.save(project3);
+                    System.out.println("Projeto 'WebPerf' cadastrado com Maria Fernanda como testadora.");
+
+                    Project project4 = new Project();
+                    project4.setName("APIShield");
+                    project4.setDescription("Validação de contratos REST, testes de carga e fuzzing em endpoints públicos.");
+                    project4.addAllowedMember(testerMaria);
+                    projectRepository.save(project4);
+                    System.out.println("Projeto 'APIShield' cadastrado com Maria Fernanda como testadora.");
+                }
             } else {
                 System.out.println("Banco de dados já contém projetos. Seed de projetos ignorada.");
             }

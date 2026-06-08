@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
-import { ApiError } from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/api";
 import { t } from "@/lib/strings";
 
 export default function LoginPage() {
@@ -27,14 +27,7 @@ export default function LoginPage() {
       await login(email.trim(), password);
       router.replace("/");
     } catch (err) {
-      if (err instanceof ApiError) {
-        try {
-          const j = JSON.parse(err.body) as { message?: string };
-          setError(j.message ?? err.body);
-        } catch {
-          setError(err.body || "Falha no login");
-        }
-      } else setError("Erro inesperado");
+      setError(getApiErrorMessage(err, "Falha no login"));
     } finally {
       setLoading(false);
     }
