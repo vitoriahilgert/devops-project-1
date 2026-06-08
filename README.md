@@ -21,9 +21,9 @@ O **GameTests** é uma plataforma de apoio a testes de software no contexto de p
 
 ## Tecnologias
 
-- **Frontend:** aplicação **Next.js 15** (React 19) gerada como **export estático** (`output: 'export'`), servida por **Nginx**. O mesmo Nginx atua como **reverse proxy**: encaminha `/api/*` para a API Spring Boot e `/uploads/*` para os arquivos servidos pela API (imagens de estratégias, etc.).
-- **Backend:** **Spring Boot 3.5**, **Java 21**, **Spring Data JPA** (Hibernate) e **OAuth2 Resource Server** (JWT). O build usa **Maven Wrapper** dentro de um **Dockerfile multi-stage**; a imagem final leva só o JAR e a **JRE 21**.
-- **Banco:** **MySQL 8.0**, com imagem derivada de um **Dockerfile** em `db/` (base `mysql:8.0`). O volume **`mysql-data`** persiste os dados; o volume **`uploads`** guarda arquivos enviados pela API.
+- **Frontend:** aplicação **Next.js** gerada como **export estático** (`output: 'export'`), servida por **Nginx**. O mesmo Nginx atua como **reverse proxy**: encaminha `/api/*` para a API Spring Boot e `/uploads/*` para os arquivos servidos pela API.
+- **Backend:** **Spring Boot** feito em **Java 21** e utilizando **Spring Data JPA** (Hibernate) e **OAuth2 Resource Server** (JWT). O build usa **Maven Wrapper**.
+- **Banco:** **MySQL**, com imagem derivada de um **Dockerfile** em `db/` (base `mysql:8.0`). O volume **`mysql-data`** persiste os dados; o volume **`uploads`** guarda arquivos enviados pela API.
 - **Orquestração:** **Docker Compose v2**, arquivo **`compose.yml`** na raiz do repositório.
 
 ## Arquitetura
