@@ -68,11 +68,15 @@ Esse comando constrói as imagens dos serviços **`db`**, **`backend`** e **`fro
 
 ## Dados para logar na plataforma
 ### Para entrar como administrador:
+
 **E-mail:** vihilgerttomasel@gmail.com
+
 **Senha:** password
 
 ### Para entrar como usuário normal:
+
 **E-mail:** sakai@gmail.com
+
 **Senha:** password
 
 ## Verificando que está funcionando
