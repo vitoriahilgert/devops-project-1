@@ -66,6 +66,15 @@ Esse comando constrói as imagens dos serviços **`db`**, **`backend`** e **`fro
 - Parar contêineres: `docker compose down`
 - Parar e **apagar volumes**: `docker compose down -v`
 
+## Dados para logar na plataforma
+### Para entrar como administrador:
+**E-mail:** vihilgerttomasel@gmail.com
+**Senha:** password
+
+### Para entrar como usuário normal:
+**E-mail:** sakai@gmail.com
+**Senha:** password
+
 ## Verificando que está funcionando
 
 `docker compose ps` deve mostrar três serviços. O **`frontend`** deve exibir **`0.0.0.0:3000->80/tcp`**. **`backend`** e **`db`** não devem listar mapeamento de porta para o host — apenas portas internas.
